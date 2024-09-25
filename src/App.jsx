@@ -35,7 +35,8 @@ function App() {
     const questionMarkCount = (input.match(/\?/g) || []).length;
     if (
       questionMarkCount > 1 ||
-      (questionMarkCount === 1 && !input.endsWith("?"))
+      (questionMarkCount === 1 && !input.endsWith("?")) ||
+      input.startsWith("?")
     ) {
       return false;
     }
