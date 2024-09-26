@@ -5,14 +5,14 @@ import { SelectDeleteAll } from "./components/SelectDeleteAll";
 function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
-  const [updatedTodo, setUpdatedTodo] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   // Load data dari localStorage
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (storedTodos) {
+    if (Array.isArray(storedTodos)) {
       setTodos(storedTodos);
+    } else {
+      setTodos([]);
     }
   }, []);
 
@@ -30,40 +30,43 @@ function App() {
 
     if (!regex.test(input)) return false;
 
+    // Cek apakah input dimulai dengan '.' atau '?'
+    if (input.startsWith(".") || input.startsWith("?")) return false;
+
     const dotCount = (input.match(/\./g) || []).length;
-    if (dotCount > 1 || input.startsWith(".")) return false;
+    if (dotCount > 1) return false;
 
     const questionMarkCount = (input.match(/\?/g) || []).length;
     if (
       questionMarkCount > 1 ||
-      (questionMarkCount === 1 && !input.endsWith("?")) ||
-      input.startsWith("?")
+      (questionMarkCount === 1 && !input.endsWith("?"))
     ) {
       return false;
     }
+
     return true;
   };
 
   const addTodo = () => {
-    if (newTodo.trim() === "") {
-      setErrorMessage("Tolong masukan data dengan benar");
+    const trimmedTodo = newTodo.trim();
+
+    // Cek validasi input sebelum menambah task baru
+    if (!isValidInput(trimmedTodo) || trimmedTodo === "") {
+      alert(
+        "Input tidak valid. Tidak boleh dimulai dengan '.' atau '?' dan harus berisi karakter yang benar."
+      );
       return;
     }
 
-    if (!isValidInput(newTodo)) {
-      setErrorMessage("Hanya bisa isi huruf, angka,tanda baca lainnya");
-      return;
-    }
-
+    // Tambahkan task baru jika input valid
     const newTask = {
       id: Date.now(),
-      text: newTodo,
+      text: trimmedTodo,
       date: new Date().toLocaleString(),
       completed: false,
     };
-    setTodos([...todos, newTask]);
-    setNewTodo("");
-    setErrorMessage("");
+    setTodos((prevTodos) => [...prevTodos, newTask]);
+    setNewTodo(""); // Kosongkan input setelah task ditambahkan
   };
 
   const handleKeyPress = (e) => {
@@ -71,32 +74,15 @@ function App() {
       addTodo();
     }
   };
+
   const deleteTodo = (id) => {
     const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
-    if (updatedTodos.length === 0) {
-      localStorage.removeItem("todos");
-    } else {
-      localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    }
   };
 
-  const updateTodo = (id) => {
+  const updateTodo = (id, newText) => {
     setTodos(
-      todos.map((todo) =>
-        todo.id === id
-          ? { ...todo, text: updatedTodo, date: new Date().toLocaleString() }
-          : todo
-      )
-    );
-    setUpdatedTodo(""); //Reset updateTodo setelah update data
-  };
-
-  const toggleComplete = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
+      todos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo))
     );
   };
 
@@ -121,21 +107,14 @@ function App() {
                 Add Task
               </button>
             </div>
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-            {/* Render Component SelectDeleteAll */}
-            {todos.length > 0 && (
-              <SelectDeleteAll todos={todos} setTodos={setTodos} />
-            )}
+            <SelectDeleteAll todos={todos} setTodos={setTodos} />
             <ul className="grid gap-2">
               {todos.map((todo) => (
                 <TodoItem
                   key={todo.id}
                   todo={todo}
-                  updatedTodo={updatedTodo}
-                  setUpdatedTodo={setUpdatedTodo}
                   updateTodo={updateTodo}
                   deleteTodo={deleteTodo}
-                  toggleComplete={toggleComplete}
                 />
               ))}
             </ul>
