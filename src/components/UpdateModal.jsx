@@ -1,36 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const UpdateModal = ({
-  isOpen,
-  onClose,
-  updatedTodo,
-  setUpdatedTodo,
-  updateTodo,
-}) => {
+export const UpdateModal = ({ isOpen, onClose, onConfirm, currentText }) => {
+  const [updatedText, setUpdatedText] = useState(currentText);
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96 grid gap-5">
-        <h2 className="text-xl font-bold">Update Task</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg grid gap-5">
+        <h2 className="text-xl font-bold">Edit Data</h2>
         <input
           type="text"
-          className="border text-gray-700 py-2 px-4 p-2 w-full rounded-full focus:outline-primary"
-          value={updatedTodo}
-          onChange={(e) => setUpdatedTodo(e.target.value)}
+          value={updatedText}
+          onChange={(e) => setUpdatedText(e.target.value)}
+          className="border px-4 py-2 rounded-full w-72 focus:outline-primary"
         />
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}
-            className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-red-500 hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
+            className="bg-red-500 text-white px-4 py-2 rounded-full font-semibold text-xs hover:border-red-500 hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
             Cancel
           </button>
           <button
-            onClick={() => {
-              updateTodo();
-              onClose();
-            }}
-            className="bg-primary text-white px-4 py-2 rounded-full hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
+            onClick={() => onConfirm(updatedText)}
+            className="bg-primary text-white px-4 py-2 rounded-full font-semibold text-xs hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
             Update
           </button>
         </div>
