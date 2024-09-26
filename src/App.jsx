@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TodoItem } from "./components/TodoItem";
+import { SelectDeleteAll } from "./components/SelectDeleteAll";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -7,7 +8,7 @@ function App() {
   const [updatedTodo, setUpdatedTodo] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Load data from localStorage
+  // Load data dari localStorage
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("todos"));
     if (storedTodos) {
@@ -15,7 +16,7 @@ function App() {
     }
   }, []);
 
-  // Save data to localStorage
+  // Save data ke localStorage
   useEffect(() => {
     if (todos.length > 0) {
       localStorage.setItem("todos", JSON.stringify(todos));
@@ -88,7 +89,7 @@ function App() {
           : todo
       )
     );
-    setUpdatedTodo(""); //Reset updateTodo after update
+    setUpdatedTodo(""); //Reset updateTodo setelah update data
   };
 
   const toggleComplete = (id) => {
@@ -121,6 +122,10 @@ function App() {
               </button>
             </div>
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+            {/* Render Component SelectDeleteAll */}
+            {todos.length > 0 && (
+              <SelectDeleteAll todos={todos} setTodos={setTodos} />
+            )}
             <ul className="grid gap-2">
               {todos.map((todo) => (
                 <TodoItem
