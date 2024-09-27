@@ -8,21 +8,36 @@ function App() {
 
   // Load data dari localStorage
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (Array.isArray(storedTodos)) {
-      setTodos(storedTodos);
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      try {
+        const parsedTodos = JSON.parse(storedTodos);
+        if (Array.isArray(parsedTodos)) {
+          setTodos(parsedTodos);
+        } else {
+          setTodos([]); // Jika datanya bukan array, set ke array kosong
+        }
+      } catch (error) {
+        console.error("Failed to parse todos from localStorage:", error);
+        setTodos([]); // Jika parsing JSON gagal, set ke array kosong
+      }
     } else {
-      setTodos([]);
+      setTodos([]); // Jika localStorage kosong, set ke array kosong
     }
+    // } else {
+    //   setTodos([]);
+    // }
   }, []);
 
   // Save data ke localStorage
   useEffect(() => {
-    if (todos.length > 0) {
-      localStorage.setItem("todos", JSON.stringify(todos));
-    } else {
-      localStorage.removeItem("todos");
-    }
+    localStorage.setItem("todos", JSON.stringify(todos));
+    // console.log("Todos state:", todos); // Ini akan menampilkan todos di setiap render
+    // if (todos.length > 0) {
+    //   localStorage.setItem("todos", JSON.stringify(todos));
+    // } else {
+    //   localStorage.removeItem("todos");
+    // }
   }, [todos]);
 
   const isValidInput = (input) => {
@@ -53,7 +68,7 @@ function App() {
     // Cek validasi input sebelum menambah task baru
     if (!isValidInput(trimmedTodo) || trimmedTodo === "") {
       alert(
-        "Input tidak valid. Tidak boleh dimulai dengan '.' atau '?' dan harus berisi karakter yang benar."
+        "Data yang kamu masukkan tidak benar. Tidak boleh dimulai dengan '.' atau '?' atau 'spasi' dan harus berisi karakter yang benar."
       );
       return;
     }
@@ -81,8 +96,10 @@ function App() {
   };
 
   const updateTodo = (id, newText) => {
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo))
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, text: newText } : todo
+      )
     );
   };
 
