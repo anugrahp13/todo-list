@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 
 export const SelectDeleteAll = ({ todos, setTodos }) => {
   const [selectAll, setSelectAll] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [hasSelectedItems, setHasSelectedItems] = useState(false);
 
+  useEffect(() => {
+    const selected = todos.some((todo) => todo.completed);
+    setHasSelectedItems(selected);
+  }, [todos]);
   const handleSelectAll = () => {
     const updatedTodos = todos.map((todo) => ({
       ...todo,
@@ -18,13 +23,14 @@ export const SelectDeleteAll = ({ todos, setTodos }) => {
     setIsDeleteModalOpen(true);
   };
 
-  if (todos.length === 0) return null;
   const confirmDeleteAll = () => {
     setTodos([]); // Hapus semua todos
     setSelectAll(false); // Reset select all state
     setIsDeleteModalOpen(false); // tutup modal
     localStorage.removeItem("todos");
   };
+
+  if (todos.length === 0) return null;
   return (
     <div className="flex justify-between gap-2">
       {todos.length > 0 && (
@@ -34,11 +40,13 @@ export const SelectDeleteAll = ({ todos, setTodos }) => {
             className="bg-primary text-white text-xs px-3 py-1 rounded-full font-semibold hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
             {selectAll ? "Deselect All" : "Select All"}
           </button>
-          <button
-            onClick={handleDeleteAllClick}
-            className="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-semibold hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
-            Delete All
-          </button>
+          {hasSelectedItems && (
+            <button
+              onClick={handleDeleteAllClick}
+              className="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-semibold hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
+              Delete All
+            </button>
+          )}
         </>
       )}
 
