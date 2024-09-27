@@ -7,6 +7,7 @@ import { UpdateModal } from "./UpdateModal";
 export const TodoItem = ({ todo, deleteTodo, updateTodo }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [updatedText, setUpdatedText] = useState(todo.text);
 
   const handleDelete = () => {
     setIsDeleteModalOpen(true); // buka modal delete
@@ -21,8 +22,8 @@ export const TodoItem = ({ todo, deleteTodo, updateTodo }) => {
     setIsUpdateModalOpen(true); // tutup modal update
   };
 
-  const handleConfirmUpdate = (updatedText) => {
-    updateTodo(todo.id, updatedText); // proses update ini akan dilakukan saat tombol di klik
+  const handleConfirmUpdate = (newText) => {
+    updateTodo(todo.id, newText); // proses update ini akan dilakukan saat tombol di klik
     setIsUpdateModalOpen(false); // tutup modal update
   };
   return (
@@ -61,7 +62,7 @@ export const TodoItem = ({ todo, deleteTodo, updateTodo }) => {
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
         onConfirm={handleConfirmUpdate}
-        currentText={todo.text}
+        currentText={updatedText}
       />
     </li>
   );

@@ -1,8 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const UpdateModal = ({ isOpen, onClose, onConfirm, currentText }) => {
   const [updatedText, setUpdatedText] = useState(currentText);
+
+  const isValidInput = (input) => {
+    const regex = /^[a-zA-Z0-9.,!? ]*$/;
+
+    if (!regex.test(input)) return false;
+
+    if (input.startsWith(".") || input.startsWith("?")) return false;
+
+    const dotCount = (input.match(/\./g) || []).length;
+    if (dotCount > 1) return false;
+
+    const questionMarkCount = (input.match(/\?/g) || []).length;
+    if (
+      questionMarkCount > 1 ||
+      (questionMarkCount === 1 && !input.endsWith("?"))
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleUpdate = () => {
+    const trimmedText = updatedText.trim();
+
+    if (!isValidInput(trimmedText) || trimmedText === "") {
+      alert(
+        "Input tidak valid. Tidak boleh dimulai dengan '.' atau '?' dan harus berisi karakter yang benar."
+      );
+      return;
+    }
+
+    onConfirm(trimmedText);
+  };
+
+  useEffect(() => {
+    const handleEnterKey = (e) => {
+      if (e.key === "Enter") {
+        handleUpdate();
+      }
+    };
+
+    window.addEventListener("keydown", handleEnterKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleEnterKey);
+    };
+  }, [updatedText]);
+
   if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg grid gap-5">
