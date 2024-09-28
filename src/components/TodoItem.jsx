@@ -27,7 +27,7 @@ export const TodoItem = ({ todo, deleteTodo, updateTodo }) => {
     setIsUpdateModalOpen(false); // tutup modal update
   };
   return (
-    <li className="flex items-center justify-between rounded-full border border-primary px-4 py-2">
+    <li className="flex items-center justify-between rounded-full border border-primary px-4 py-2 gap-4">
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
@@ -39,7 +39,7 @@ export const TodoItem = ({ todo, deleteTodo, updateTodo }) => {
           {todo.text}
         </span>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex gap-2">
         <button
           onClick={handleUpdate}
           className="bg-primary text-white p-1 w-8 h-8 rounded-full hover:border-primary hover:text-white hover:shadow-lg hover:opacity-80 transition duration-300 ease-in-out">
