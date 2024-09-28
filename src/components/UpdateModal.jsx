@@ -55,13 +55,13 @@ export const UpdateModal = ({ isOpen, onClose, onConfirm, currentText }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg grid gap-5">
-        <h2 className="text-xl font-bold">Edit Data</h2>
+      <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-lg grid gap-5">
+        <h2 className="text-xl font-bold dark:text-white">Edit Data</h2>
         <input
           type="text"
           value={updatedText}
           onChange={(e) => setUpdatedText(e.target.value)}
-          className="border px-4 py-2 rounded-full w-72 focus:outline-primary"
+          className="border dark:text-white dark:bg-slate-700 px-4 py-2 rounded-full w-72 focus:outline-primary dark:focus:outline-white"
         />
         <div className="flex justify-end space-x-4">
           <button
