@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { TodoItem } from "./components/TodoItem";
 import { SelectDeleteAll } from "./components/SelectDeleteAll";
+import { DarkModeToggle } from "./components/DarkModeToggle";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -24,28 +25,19 @@ function App() {
     } else {
       setTodos([]); // Jika localStorage kosong, set ke array kosong
     }
-    // } else {
-    //   setTodos([]);
-    // }
   }, []);
 
-  // Save data ke localStorage
+  // Save data ke localStorage setiap kali 'todos' berubah
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-    // console.log("Todos state:", todos); // Ini akan menampilkan todos di setiap render
-    // if (todos.length > 0) {
-    //   localStorage.setItem("todos", JSON.stringify(todos));
-    // } else {
-    //   localStorage.removeItem("todos");
-    // }
+    if (todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
   }, [todos]);
 
   const isValidInput = (input) => {
     const regex = /^[a-zA-Z0-9.,!? ]*$/;
 
     if (!regex.test(input)) return false;
-
-    // Cek apakah input dimulai dengan '.' atau '?'
     if (input.startsWith(".") || input.startsWith("?")) return false;
 
     const dotCount = (input.match(/\./g) || []).length;
@@ -65,7 +57,6 @@ function App() {
   const addTodo = () => {
     const trimmedTodo = newTodo.trim();
 
-    // Cek validasi input sebelum menambah task baru
     if (!isValidInput(trimmedTodo) || trimmedTodo === "") {
       alert(
         "Data yang kamu masukkan tidak benar. Tidak boleh dimulai dengan '.' atau '?' atau 'spasi' dan harus berisi karakter yang benar."
@@ -73,7 +64,6 @@ function App() {
       return;
     }
 
-    // Tambahkan task baru jika input valid
     const newTask = {
       id: Date.now(),
       text: trimmedTodo,
@@ -105,14 +95,17 @@ function App() {
 
   return (
     <div className="container mx-auto px-4 lg:max-w-7xl flex items-center justify-center min-h-screen">
-      <div className="max-w-3xl">
-        <div className="text-center text-sm text-primary bg-white p-6 rounded-lg shadow-lg">
+      <div className="max-w-3xl relative">
+        <div className="absolute right-3 top-3 dark:text-white">
+          <DarkModeToggle />
+        </div>
+        <div className="text-sm text-primary bg-white p-6 rounded-lg shadow-lg dark:bg-dark">
           <div className="text-center text-sm text-primary grid gap-5">
-            <h1 className="font-bold text-3xl">To-Do List</h1>
+            <h1 className="font-bold text-3xl dark:text-white">To-Do List</h1>
             <div className="relative">
               <input
                 type="text"
-                className="border text-gray-700 py-2 px-4 lg:w-[36rem] w-full rounded-full pr-20 focus:outline-primary"
+                className="border dark:border-slate-700 dark:bg-slate-700 bg-white text-gray-700 dark:text-white py-2 px-4 lg:w-[36rem] w-full rounded-full pr-20 focus:outline-primary dark:focus:outline-white"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
                 onKeyPress={handleKeyPress}
