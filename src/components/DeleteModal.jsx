@@ -2,9 +2,9 @@ export const DeleteModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg grid gap-5">
-        <h2 className="text-xl font-bold">Delete Data</h2>
-        <p className="text-base">
+      <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-lg grid gap-5">
+        <h2 className="text-xl font-bold dark:text-white">Delete Data</h2>
+        <p className="text-base dark:text-white">
           Apakkah kamu yakin ingin menghapus data ini?
         </p>
         <div className="flex justify-end space-x-4">
