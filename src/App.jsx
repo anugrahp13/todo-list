@@ -112,7 +112,7 @@ function App() {
             <div className="relative">
               <input
                 type="text"
-                className="border text-gray-700 py-2 px-4 w-[36rem] rounded-full pr-20 focus:outline-primary"
+                className="border text-gray-700 py-2 px-4 lg:w-[36rem] w-full rounded-full pr-20 focus:outline-primary"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
                 onKeyPress={handleKeyPress}
