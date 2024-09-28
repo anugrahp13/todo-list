@@ -10,6 +10,7 @@ export const SelectDeleteAll = ({ todos, setTodos }) => {
     const selected = todos.some((todo) => todo.completed);
     setHasSelectedItems(selected);
   }, [todos]);
+
   const handleSelectAll = () => {
     const updatedTodos = todos.map((todo) => ({
       ...todo,

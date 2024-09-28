@@ -10,33 +10,41 @@ export const TodoItem = ({ todo, deleteTodo, updateTodo }) => {
   const [updatedText, setUpdatedText] = useState(todo.text);
 
   const handleDelete = () => {
-    setIsDeleteModalOpen(true); // buka modal delete
+    setIsDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    deleteTodo(todo.id); // proses delete ini akan dilakukan saat tombol di klik
-    setIsDeleteModalOpen(false); // tutup modal delete
+    deleteTodo(todo.id);
+    setIsDeleteModalOpen(false);
   };
 
   const handleUpdate = () => {
-    setIsUpdateModalOpen(true); // tutup modal update
+    setIsUpdateModalOpen(true);
   };
 
   const handleConfirmUpdate = (newText) => {
-    updateTodo(todo.id, newText); // proses update ini akan dilakukan saat tombol di klik
-    setIsUpdateModalOpen(false); // tutup modal update
+    updateTodo(todo.id, newText);
+    setIsUpdateModalOpen(false);
   };
+
+  const toggleComplete = () => {
+    updateTodo(todo.id, {
+      ...todo,
+      completed: !todo.completed,
+    });
+  };
+
   return (
-    <li className="flex items-center justify-between rounded-full border border-primary px-4 py-2 gap-4">
+    <li className="flex items-center justify-between rounded-full border border-primary dark:border-white dark:bg-gray-700 px-4 py-2 gap-4">
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={todo.completed}
-          onChange={() => toggleComplete(todo.id)}
+          onChange={toggleComplete}
           className="form-checkbox h-4 w-4 text-primary bg-white checked:bg-primary border-primary focus:ring-primary"
         />
         <span className={todo.completed ? "line-through" : ""}>
-          {todo.text}
+          <p className="text-primary dark:text-white">{todo.text}</p>
         </span>
       </div>
       <div className="flex gap-2">
